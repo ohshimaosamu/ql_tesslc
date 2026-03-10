@@ -23,8 +23,8 @@ python3 ql_tesscl.py
 $ python ~/python_prog/ql_tesslc.py "UV Cet"
 /home/xxx/xxx/lib/python3.13/site-packages/lightkurve/prf/__init__.py:7: UserWarning: Warning: the tpfmodel submodule is not available without oktopus installed, which requires a current version of autograd. See #1452 for details.
   warnings.warn(
-[INFO] input interpreted as SIMBAD object name: UV Cet
-[INFO] resolved TIC: 632499595
+[INFO] input interpreted as SIMBAD object name: UV Cet\r
+[INFO] resolved TIC: 632499595\r
 [INFO] TIC was resolved directly from SIMBAD identifiers.
 [INFO] target: TIC 632499595
 [INFO] download dir: ./TIC632499595
@@ -37,8 +37,7 @@ $ python ~/python_prog/ql_tesslc.py "UV Cet"
 [INFO] total downloaded entries: 7
 
 表示する lcfits を選んでください
---------------------------------------------------
-  1 : mastDownload/HLSP/hlsp_qlp_tess_ffi_s0030-0000000632499595_tess_v01_llc
+  1 : mastDownload/HLSP/ hlsp_qlp_tess_ffi_s0030-0000000632499595_tess_v01_llc \r
   2 : mastDownload/HLSP/hlsp_qlp_tess_ffi_s0097-0000000632499595_tess_v01_llc
   3 : mastDownload/HLSP/hlsp_tess-spoc_tess_phot_0000000632499595-s0030_tess_v1_tp
   4 : mastDownload/TESS/tess2020266004630-s0030-0000000632499595-0195-a_fast
