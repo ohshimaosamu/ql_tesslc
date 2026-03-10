@@ -7,11 +7,11 @@ python3 ql_tesscl.py "UV Cet"
 
 ある場面。複数のフレアが出現しているのがわかる。
 
-!(images/ex_uv_cet1.png)
+![UV Cet](images/ex_uv_cet1.png)
 
 スクロールする様子の動画
 
-!(images/scan_lcfits.mp4)
+![scan lightcurve](images/scan_lcfits.mp4)
 
 次のように何も引数を付けなければ、オプションなどの使い方が表示される。
 
