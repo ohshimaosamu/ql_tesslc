@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+"""
+追加機能：./TICxxxx/ 以下に *_lc.fits が既にあるか確認し、あればダウンロードを飛ばす
+　　　　　--redownload オプションを追加
+"""
 import sys
 import os
 import re
@@ -47,22 +50,15 @@ def sanitize_filename(text):
     return s
 
 
-def zero_pad_tic(tic_id):
-    # TESS/TIC系ファイル名でよく使われる16桁
-    return f"{int(tic_id):016d}"
-
-
 # ============================================================
 # SIMBAD name -> TIC
 # ============================================================
 
-def resolve_name_to_tic(target_name, search_radius_arcsec=5.0):
+def resolve_name_to_tic(target_name):
     """
     SIMBAD名からTIC番号を得る。
     まず Identifiers から TIC cross-id を直接探す。
-    無ければ座標を得て近傍TIC検索する。
     """
-    # 1) まず Identifiers から TIC を探す
     try:
         ids_tab = Simbad.query_objectids(target_name)
     except Exception:
@@ -89,7 +85,6 @@ def resolve_name_to_tic(target_name, search_radius_arcsec=5.0):
                     tic_id = int(m.group(1))
                     return tic_id, None, None
 
-    # 2) fallback: 座標取得
     sim = Simbad()
     sim.add_votable_fields("ra(d)", "dec(d)")
     result = sim.query_object(target_name)
@@ -113,18 +108,10 @@ def resolve_name_to_tic(target_name, search_radius_arcsec=5.0):
     dec_deg = float(result[dec_col][0])
     coord = SkyCoord(ra=ra_deg * u.deg, dec=dec_deg * u.deg, frame="icrs")
 
-    # 座標検索 fallback は簡単実装に留める
-    # lightkurve の search_lightcurve に object name を直接渡せる場合もあるが、
-    # ここでは TIC 解決を維持する。
-    try:
-        # 近傍 TIC を lightkurve/search target handling に委ねず、ここでは失敗として扱う
-        # 必要なら astroquery.mast.Catalogs を使う版へ戻せる。
-        raise RuntimeError(
-            f"SIMBAD identifiers にTICが無く、座標fallbackも未使用です: {target_name} "
-            f"(RA={ra_deg:.8f}, DEC={dec_deg:.8f})"
-        )
-    except Exception as e:
-        raise RuntimeError(str(e))
+    raise RuntimeError(
+        f"SIMBAD identifiers にTICが見つかりませんでした: {target_name} "
+        f"(RA={ra_deg:.8f}, DEC={dec_deg:.8f})"
+    )
 
 
 # ============================================================
@@ -150,7 +137,6 @@ def download_tess_lc_for_tic(tic_id, download_root=".", prefer_authors=None):
     total_downloaded = 0
     any_found = False
 
-    # 不要な警告を抑制
     warnings.filterwarnings(
         "ignore",
         message="Because of their large size, Astroquery should not be used to download TESS FFI products."
@@ -223,7 +209,6 @@ def find_lc_dirs(tic_id, root="."):
     for pat in patterns:
         found.extend(glob.glob(pat, recursive=True))
 
-    # 重複除去
     fits_list = sorted(set(found))
 
     entries = []
@@ -234,6 +219,11 @@ def find_lc_dirs(tic_id, root="."):
         entries.append((display_name, fp))
 
     return base_dir, entries
+
+
+def count_local_lc_files(tic_id, root="."):
+    _, entries = find_lc_dirs(tic_id, root=root)
+    return len(entries)
 
 
 # ============================================================
@@ -327,9 +317,6 @@ def print_menu(entries, shown_flags):
 # ============================================================
 
 class IntOffsetFormatter(ScalarFormatter):
-    """
-    x軸右下のオフセット表記を整数化寄りにする
-    """
     def get_offset(self):
         s = super().get_offset()
         if not s:
@@ -337,7 +324,6 @@ class IntOffsetFormatter(ScalarFormatter):
 
         txt = s.replace(" ", "")
         try:
-            # 例: +2.457e6 など
             m = re.match(r'([+-]?\d+(?:\.\d+)?)(?:e([+-]?\d+))?', txt)
             if m:
                 base = float(m.group(1))
@@ -389,7 +375,6 @@ class LCScanner:
         self.tmin = float(np.min(self.x))
         self.tmax = float(np.max(self.x))
 
-        # 最初の点が窓の右端に来るように開始
         self.current_left = self.tmin - self.window_days
 
         if self.intermittent:
@@ -602,6 +587,11 @@ def main():
         default="snapshots",
         help="sキーで保存するPNGの保存先ディレクトリ (default: snapshots)"
     )
+    parser.add_argument(
+        "--redownload",
+        action="store_true",
+        help="既存ローカルファイルがあっても再ダウンロードする"
+    )
 
     args = parser.parse_args()
 
@@ -633,13 +623,31 @@ def main():
         print(f"[ERROR] TIC解決に失敗しました: {e}")
         sys.exit(1)
 
-    try:
-        download_tess_lc_for_tic(tic_id, download_root=".")
-    except Exception as e:
-        print(f"[ERROR] ダウンロード処理で失敗しました: {e}")
-        sys.exit(1)
+    local_count_before = count_local_lc_files(tic_id, root=".")
+    if local_count_before > 0:
+        print(f"[INFO] local lc.fits files found: {local_count_before}")
+
+    if args.redownload:
+        print("[INFO] --redownload 指定あり: 再ダウンロードを実行します。")
+        try:
+            download_tess_lc_for_tic(tic_id, download_root=".")
+        except Exception as e:
+            print(f"[ERROR] ダウンロード処理で失敗しました: {e}")
+            sys.exit(1)
+    else:
+        if local_count_before > 0:
+            print(f"[INFO] 既存のローカルデータを使用します: ./TIC{tic_id}")
+        else:
+            try:
+                download_tess_lc_for_tic(tic_id, download_root=".")
+            except Exception as e:
+                print(f"[ERROR] ダウンロード処理で失敗しました: {e}")
+                sys.exit(1)
 
     base_dir, entries = find_lc_dirs(tic_id, root=".")
+    final_count = len(entries)
+    print(f"[INFO] usable lc.fits files: {final_count}")
+
     if not entries:
         print("lc.fits が見つかりません。")
         print(f"探した場所: {base_dir}")
