@@ -16,6 +16,11 @@ python3 ql_tesscl.py "UV Cet"
 
 python3 ql_tesscl.py
 
+sage: ql_tesslc.py [-h] [-s SPEED] [-w WINDOW] [--intermittent]
+                    [--save-dir SAVE_DIR] [--redownload]
+                    target
+
+
 
 
 # 実行例（Linux）
