@@ -9,7 +9,7 @@ python3 ql_tesscl.py "UV Cet"
 
 ![UV Cet](images/ex_uv_cet1.png)
 
-スクロールする様子の動画
+自動スクロールする様子の動画
 
 ![scan lightcurve](images/scan_lcfits.mp4)
 
@@ -19,7 +19,7 @@ python3 ql_tesscl.py
 
 
 
-#実行例（Linux）
+# 実行例（Linux）
 
 $ python ~/python_prog/ql_tesslc.py "UV Cet"
 
