@@ -10,8 +10,7 @@ python3 ql_tesscl.py "UV Cet"
 ![UV Cet](images/ex_uv_cet1.png)
 
 自動スクロールする様子の動画
-
-![scan lightcurve](images/scan_lcfits.mp4)
+[自動スクロールする様子の動画](https://github.com/ohshimaosamu/ql_tesslc/raw/main/images/scan_lcfits.mp4)
 
 次のように何も引数を付けなければ、オプションなどの使い方が表示される。
 
