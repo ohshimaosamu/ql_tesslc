@@ -20,7 +20,7 @@ sage: ql_tesslc.py [-h] [-s SPEED] [-w WINDOW] [--intermittent]
                     [--save-dir SAVE_DIR] [--redownload]
                     target
 
-
+必要なpythonライブラリ：numpy, matplotlib, astropy, astroquery, lightkurve 
 
 
 # 実行例（Linux）
