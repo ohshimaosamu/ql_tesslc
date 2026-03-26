@@ -94,6 +94,6 @@ $ python ~/python_prog/ql_tesslc.py "UV Cet"
 # plot_lcfits.py
 
 先に一度ql_tesslcを使ったら、その星のlcfitsファイルはすでに手元にダウンロードされています。
-次にじっくりとその光度曲線を調べてみたいと思ったら、もうql_tesslcを使わなずに、この"plot_lcfits.py"を使えば、
+次にじっくりとその光度曲線を調べてみたいと思ったら、もうql_tesslcを使わず、この"plot_lcfits.py"を使えば、
 matplotlibが光度曲線を表示してくれます。matplotlibのグラフは、虫めがねアイコンをクリックすればカーソルで指定した
 範囲を自由に拡大してくれるので、いろいろと吟味することができます。
