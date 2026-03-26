@@ -3,7 +3,13 @@
 
 最も簡単な使い方
 
-python3 ql_tesscl.py "UV Cet"
+ python3 ql_tesscl.py "UV Cet"
+
+または、_(アンダースコア)を利用して星名中にスペース文字が入らないようにすれば、全体を""でくくる必要がなくなります。また大文字小文字も無視されますから、次のように入力すれば楽です。
+
+ python3 ql_tesscl.py uv_cet
+
+ 
 
 ある場面。複数のフレアが出現しているのがわかる。
 
@@ -83,3 +89,11 @@ $ python ~/python_prog/ql_tesslc.py "UV Cet"
 
 以上を実行した時の様子
 ![scan lightcurve](images/scan_UV_Cet6.mp4)
+
+
+# plot_lcfits.py
+
+先に一度ql_tesslcを使ったら、その星のlcfitsファイルはすでに手元にダウンロードされています。
+次にじっくりとその光度曲線を調べてみたいと思ったら、もうql_tesslcを使わなずに、この"plot_lcfits.py"を使えば、
+matplotlibが光度曲線を表示してくれます。matplotlibのグラフは、虫めがねアイコンをクリックすればカーソルで指定した
+範囲を自由に拡大してくれるので、いろいろと吟味することができます。
