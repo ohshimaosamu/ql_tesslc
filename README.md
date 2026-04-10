@@ -94,6 +94,13 @@ $ python ~/python_prog/ql_tesslc.py "UV Cet"
 ![scan lightcurve](images/scan_UV_Cet6.mp4)
 
 
+# name2tic.py
+先に一度ql_tesslcを使ったら、その星のlcfitsファイルはすでに手元にダウンロードされています。
+次にじっくりとその光度曲線を調べてみたいと思ったら収められているディレクトリをTIC番号で探さなければならない。
+これは不便なので、このソフトを作った。
+名前を引数として与えれば、TIC番号が表示され、さらにLinuxの場合は、そのディレクトリが合う場所を探し出してフルパス表示してくれる（前提：locateコマンドをインストールして、sudo updatedaを実行してある）。
+
+
 # plot_lcfits.py
 
 先に一度ql_tesslcを使ったら、その星のlcfitsファイルはすでに手元にダウンロードされています。
