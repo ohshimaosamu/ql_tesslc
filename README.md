@@ -30,6 +30,9 @@ sage: ql_tesslc.py [-h] [-s SPEED] [-w WINDOW] [--intermittent]
 
 numpy, matplotlib, astropy, astroquery, lightkurve 
 
+# 実行するディレクトリ（フォルダー）
+実行すると自動でダウンロードしたTESSの*_lc.fitsファイルがカレントディレクトリに保存される。
+したがって、今後も複数の天体のTESSデータを扱うのならば、あちこちデータファイルが散らばらないようにいつも決まったディレクトリ（例えば/TESS(Windowsなら\TESS)）から実行するとよい。
 
 # 実行例（Linux）
 
